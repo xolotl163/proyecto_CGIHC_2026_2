@@ -1,0 +1,24 @@
+# 3ds Max Wavefront OBJ Exporter v0.99 - (c)2007 guruware
+# File Created: 12.04.2026 10:59:58
+
+newmtl wire_178211226
+	Ns 32
+	d 1
+	Tr 0
+	Tf 1 1 1
+	illum 2
+	Ka 0.6980 0.8275 0.8863
+	Kd 0.6980 0.8275 0.8863
+	Ks 0.3500 0.3500 0.3500
+	map_Kd negro00.png
+
+newmtl wire_161097209
+	Ns 32
+	d 1
+	Tr 0
+	Tf 1 1 1
+	illum 2
+	Ka 0.6314 0.3804 0.8196
+	Kd 0.6314 0.3804 0.8196
+	Ks 0.3500 0.3500 0.3500
+	map_Kd azul00.png

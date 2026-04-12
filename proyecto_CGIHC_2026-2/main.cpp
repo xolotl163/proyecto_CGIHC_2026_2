@@ -414,8 +414,16 @@ int main() {
 	Model piso("resources/objects/piso/piso.obj");
 	
 	//modelos estaticos
+	Model suelo("resources/objects/static models/banqueta/banqueta.obj");
+	Model techo("resources/objects/static models/banqueta/techo.obj");
+	Model techo01("resources/objects/static models/banqueta/techo.obj");
+	Model techo02("resources/objects/static models/banqueta/techo.obj");
+	Model outside_suelo("resources/objects/static models/banqueta/outside_banqueta.obj");
 	Model columna_circulo("resources/objects/static models/columna_circulo/columna_circulo.obj");
 	Model columna_circulo00("resources/objects/static models/columna_circulo/columna_circulo.obj");
+	Model columna_circulo01("resources/objects/static models/columna_circulo/columna_circulo.obj");
+	Model columna_circulo02("resources/objects/static models/columna_circulo/columna_circulo.obj");
+	Model columna_circulo03("resources/objects/static models/columna_circulo/columna_circulo.obj");
 	Model columna_ovalo("resources/objects/static models/columna_ovalo/columna_ovalo.obj");
 	Model columna_ovalo01("resources/objects/static models/columna_ovalo/columna_ovalo.obj");
 	Model columna_ovalo02("resources/objects/static models/columna_ovalo/columna_ovalo.obj");
@@ -423,11 +431,17 @@ int main() {
 	Model columna_ovalo04("resources/objects/static models/columna_ovalo/columna_ovalo.obj");
 	Model columna_ovalo05("resources/objects/static models/columna_ovalo/columna_ovalo.obj");
 	Model banca("resources/objects/static models/Bench/Bench_4.obj");
+	Model banca00("resources/objects/static models/Bench/Bench_4.obj");
+	Model banca01("resources/objects/static models/Bench/Bench_4.obj");
+	Model banca02("resources/objects/static models/Bench/Bench_4.obj");
+	Model banca03("resources/objects/static models/Bench/Bench_4.obj");
+	Model banca04("resources/objects/static models/Bench/Bench_4.obj");
+	Model banca05("resources/objects/static models/Bench/Bench_4.obj");
 	Model escaleras("resources/objects/static models/stairs/escaleras_002.obj");
 	Model lampara("resources/objects/static models/street_lamp/objLamp.obj");
-	Model banqueta00("resources/objects/static models/banqueta/banqueta.obj"); //sostiene las escaleras
-	Model banqueta01("resources/objects/static models/banqueta/banqueta.obj"); //suelo del lado derecho del escenario
-	Model suelo("resources/objects/static models/banqueta/banqueta.obj");
+	Model banqueta00("resources/objects/static models/banqueta/banqueta00.obj"); //sostiene las escaleras
+	Model banqueta01("resources/objects/static models/banqueta/banqueta00.obj"); //suelo del lado derecho del escenario
+	Model banqueta02("resources/objects/static models/banqueta/banqueta00.obj"); //suelo del lado derecho del escenario
 	Model reja("resources/objects/static models/reja/reja.obj");
 	Model reja00("resources/objects/static models/reja/reja.obj");
 	Model reja01("resources/objects/static models/reja/reja.obj");
@@ -446,32 +460,64 @@ int main() {
 	Model muro02("resources/objects/static models/banqueta/wall.obj");
 	Model muro03("resources/objects/static models/banqueta/wall.obj");
 	Model muro04("resources/objects/static models/banqueta/wall.obj");
+	Model muro05("resources/objects/static models/banqueta/wall.obj");
+	Model muro06("resources/objects/static models/banqueta/wall.obj");
+	Model ventana("resources/objects/static models/ventana/ventana.obj");
+	Model ventana00("resources/objects/static models/ventana/ventana.obj");
+	Model ventana01("resources/objects/static models/ventana/ventana.obj");
+	Model ventana02("resources/objects/static models/ventana/ventana.obj");
 
 	//modelos animados
 	ModelAnim personaje01("resources/objects/Personaje1/Arm.dae");
 	personaje01.initShaders(animShader.ID);
+
 	ModelAnim angry("resources/objects/animated models/Angry/Angry00.dae");
 	angry.initShaders(animShader.ID);
+	
 	ModelAnim pointing("resources/objects/animated models/Pointing Remy/Pointing00.dae");
 	pointing.initShaders(animShader.ID);
+	
 	ModelAnim sittingLouise("resources/objects/animated models/Sitting Louise/Sitting00.dae");
 	sittingLouise.initShaders(animShader.ID);
+	
+	ModelAnim sittingLouise00("resources/objects/animated models/Sitting Louise/Sitting00.dae");
+	sittingLouise00.initShaders(animShader.ID);
+	
+	ModelAnim sittingLouise01("resources/objects/animated models/Sitting Louise/Sitting00.dae");
+	sittingLouise01.initShaders(animShader.ID);
+	
 	ModelAnim talkingAdam("resources/objects/animated models/Talking Adam/Talking00.dae");
 	talkingAdam.initShaders(animShader.ID);
+	
 	ModelAnim talkingEve("resources/objects/animated models/Talking Eve/Talking00.dae");
 	talkingEve.initShaders(animShader.ID);
+	ModelAnim talkingEve00("resources/objects/animated models/Talking Eve/Talking00.dae");
+	talkingEve00.initShaders(animShader.ID);
+	
 	ModelAnim talkingBoy("resources/objects/animated models/TalkingBoy/Talking00.dae");
 	talkingBoy.initShaders(animShader.ID);
+	
 	ModelAnim talkingPhoneBoy("resources/objects/animated models/TalkingPhoneBoy/TalkingPhoneBoy.dae");
 	talkingPhoneBoy.initShaders(animShader.ID);
+	
 	ModelAnim talkingPhoneGirl("resources/objects/animated models/TalkingPhoneGirl/TalkingPhone.dae");
 	talkingPhoneGirl.initShaders(animShader.ID);
+	
 	ModelAnim talkingWorker("resources/objects/animated models/TalkingWorker/Talking00.dae");
 	talkingWorker.initShaders(animShader.ID);
+	ModelAnim talkingWorker00("resources/objects/animated models/TalkingWorker/Talking00.dae");
+	talkingWorker00.initShaders(animShader.ID);
+	ModelAnim talkingWorker01("resources/objects/animated models/TalkingWorker/Talking00.dae");
+	talkingWorker01.initShaders(animShader.ID);
+	ModelAnim talkingWorker02("resources/objects/animated models/TalkingWorker/Talking00.dae");
+	talkingWorker02.initShaders(animShader.ID);
+	
 	ModelAnim walkingBrian("resources/objects/animated models/Walking Brian/Walking00.dae");
 	walkingBrian.initShaders(animShader.ID);
+	
 	ModelAnim walkingKate("resources/objects/animated models/Walking Kate/Walking00.dae");
 	walkingKate.initShaders(animShader.ID);
+	
 	ModelAnim walkingLeonard("resources/objects/animated models/Walking Leonard/Walking00.dae");
 	walkingLeonard.initShaders(animShader.ID);
 
@@ -571,6 +617,10 @@ int main() {
 		// note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
 		myShader.setMat4("projection", projectionOp);
 		
+		// draw skybox
+		skyboxShader.use();
+		skybox.Draw(skyboxShader, viewOp, projectionOp, camera);
+
 		/*Sección de modelos animados -> starts*/
 		
 		//Remember to activate the shader with the animation
@@ -591,6 +641,56 @@ int main() {
 		animShader.setMat4("model", modelOp);
 		personaje01.Draw(animShader);
 
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-525.0f, 1.0f, -135.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.15f));
+		animShader.setMat4("model", modelOp);
+		sittingLouise.Draw(animShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-630.0f, 1.0f, 475.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.15f));
+		animShader.setMat4("model", modelOp);
+		sittingLouise00.Draw(animShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-650.0f, 1.0f, -480.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.15f));
+		animShader.setMat4("model", modelOp);
+		sittingLouise01.Draw(animShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-750.0f, 0.0f, -225.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
+		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		animShader.setMat4("model", modelOp);
+		talkingEve.Draw(animShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-750.0f, 0.0f, -275.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
+		animShader.setMat4("model", modelOp);
+		talkingWorker.Draw(animShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-650.0f, 0.0f, -350.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
+		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		animShader.setMat4("model", modelOp);
+		talkingEve00.Draw(animShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-635.0f, 0.0f, -400.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
+		animShader.setMat4("model", modelOp);
+		talkingWorker00.Draw(animShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-742.0f, 0.0f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
+		animShader.setMat4("model", modelOp);
+		talkingWorker01.Draw(animShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-742.0f, 0.0f, 35.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
+		animShader.setMat4("model", modelOp);
+		talkingWorker02.Draw(animShader);
+
 		/*
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		animShader.setMat4("model", modelOp);
@@ -599,10 +699,6 @@ int main() {
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 0.0f));
 		animShader.setMat4("model", modelOp);
 		pointing.Draw(animShader);
-
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 0.0f));
-		animShader.setMat4("model", modelOp);
-		sittingLouise.Draw(animShader);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(150.0f, 0.0f, 0.0f));
 		animShader.setMat4("model", modelOp);
@@ -623,10 +719,6 @@ int main() {
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -150.0f));
 		animShader.setMat4("model", modelOp);
 		talkingPhoneGirl.Draw(animShader);
-
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -200.0f));
-		animShader.setMat4("model", modelOp);
-		talkingWorker.Draw(animShader);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-50.0f, 0.0f, 0.0f));
 		animShader.setMat4("model", modelOp);
@@ -652,16 +744,30 @@ int main() {
 		staticShader.setMat4("projection", projectionOp);
 		staticShader.setMat4("view", viewOp);
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 20.0f, -200.0f));
-		modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
-		staticShader.setMat4("model", modelOp);
-		escaleras.Draw(staticShader);
-
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 1.0f, 50.0f));
 		staticShader.setMat4("model", modelOp);
 		suelo.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 245.0f, 400.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 1.0f, 50.0f));
+		staticShader.setMat4("model", modelOp);
+		techo.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-310.0f, 245.0f, -300.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(20.0f, 1.0f, 20.0f));
+		staticShader.setMat4("model", modelOp);
+		techo01.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(375.0f, 245.0f, -300.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(12.0f, 1.0f, 20.0f));
+		staticShader.setMat4("model", modelOp);
+		techo02.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-700.0f, 0.0f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(20.0f, 1.0f, 50.0f));
+		staticShader.setMat4("model", modelOp);
+		outside_suelo.Draw(staticShader);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 5.0f, -200.0f));
 		modelOp = glm::scale(modelOp, glm::vec3(10.0f));
@@ -672,6 +778,11 @@ int main() {
 		modelOp = glm::scale(modelOp, glm::vec3(32.5f, 10.0f, 12.5f));
 		staticShader.setMat4("model", modelOp);
 		banqueta01.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-170.0f, 0.0f, 600.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(32.5f, 10.0f, 12.5f));
+		staticShader.setMat4("model", modelOp);
+		banqueta02.Draw(staticShader);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-500.0f, 1.0f, 200.0f));
 		modelOp = glm::scale(modelOp, glm::vec3(5.0f, 6.0f, 5.0f));
@@ -784,6 +895,19 @@ int main() {
 		staticShader.setMat4("model", modelOp);
 		muro04.Draw(staticShader);
 
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-50.0f, 47.5f, 730.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(20.0f, 20.0f, 20.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		muro05.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-225.0f, 47.5f, 702.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(20.0f, 20.0f, 20.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		muro06.Draw(staticShader);
+
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-450.0f, 0.0f, -80.0f));
 		modelOp = glm::scale(modelOp, glm::vec3(1.75f, 7.5f, 1.75f));
 		staticShader.setMat4("model", modelOp);
@@ -793,6 +917,21 @@ int main() {
 		modelOp = glm::scale(modelOp, glm::vec3(1.75f, 7.5f, 1.75f));
 		staticShader.setMat4("model", modelOp);
 		columna_circulo00.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-450.0f, 0.0f, 450.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.75f, 7.5f, 1.75f));
+		staticShader.setMat4("model", modelOp);
+		columna_circulo01.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-200.0f, 0.0f, 450.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.75f, 7.5f, 1.75f));
+		staticShader.setMat4("model", modelOp);
+		columna_circulo02.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 450.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.75f, 7.5f, 1.75f));
+		staticShader.setMat4("model", modelOp);
+		columna_circulo03.Draw(staticShader);
 		
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-200.0f, 0.0f, 290.0f));
 		modelOp = glm::scale(modelOp, glm::vec3(10.0f, 30.0f, 10.0f));
@@ -824,22 +963,95 @@ int main() {
 		staticShader.setMat4("model", modelOp);
 		columna_ovalo05.Draw(staticShader);
 
-		/*
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, 200.0f));
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-525.0f, 1.0f, -135.0f));
 		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 50.0f, 50.0f));
 		staticShader.setMat4("model", modelOp);
 		banca.Draw(staticShader);
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 0.0f, -200.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(5.0f));
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-525.0f, 1.0f, -350.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 50.0f, 50.0f));
+		staticShader.setMat4("model", modelOp);
+		banca00.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-650.0f, 1.0f, -480.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 50.0f, 50.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		banca01.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-800.0f, 1.0f, -480.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 50.0f, 50.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		banca02.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-525.0f, 1.0f, 300.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 50.0f, 50.0f));
+		staticShader.setMat4("model", modelOp);
+		banca03.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-630.0f, 1.0f, 475.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 50.0f, 50.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		banca04.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-850.0f, 1.0f, 475.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(50.0f, 50.0f, 50.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		banca05.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-560.0f, 0.0f, -460.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(7.5f));
 		staticShader.setMat4("model", modelOp);
 		lampara.Draw(staticShader);
-		*/
-		/*sección de Modelos estaticos -> ends*/
 
-		// draw skybox as last
-		skyboxShader.use();
-		skybox.Draw(skyboxShader, viewOp, projectionOp, camera);
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-750.0f, 0.0f, 475.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(7.5f));
+		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		lampara.Draw(staticShader);
+
+		//aqui se colocan los modelos estaticos que tengan algun tipo de transparencia -> inicia
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 20.0f, -200.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
+		staticShader.setMat4("model", modelOp);
+		escaleras.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-300.0f, 100.0f, 475.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(10.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		ventana.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-50.0f, 10.0f, 485.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(10.0f, 23.5f, 7.5f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		ventana00.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(75.0f, 10.0f, 485.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(15.0f, 23.5f, 7.5f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		ventana01.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(150.0f, 10.0f, 610.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(7.5f, 23.5f, 25.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		ventana02.Draw(staticShader);
+
+		glDisable(GL_BLEND);
+		//modelos estaticos con transparencia -> termina
+
+		/*sección de Modelos estaticos -> ends*/
 
 		// Limitar el framerate a 60
 		deltaTime = SDL_GetTicks() - lastFrame; // time for full 1 loop
