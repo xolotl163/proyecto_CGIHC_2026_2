@@ -81,6 +81,11 @@ public:
             meshes[i].Draw(shader);
     }
     
+	~ModelAnim()
+	{
+		importer.FreeScene();
+	}
+
 private:
 
     /*  Functions   */
