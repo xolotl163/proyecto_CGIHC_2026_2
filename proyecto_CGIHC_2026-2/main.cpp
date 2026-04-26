@@ -1,5 +1,10 @@
 /*----------------------------------------------------------------------------------------------------------*/
 /*---------------- Proyecto Computación Grafica e Interaccion Humano computadora  --------------------------*/
+/*---------------- Integrantes del equipo:                                        --------------------------*/
+/*---------------- Chavez madrid Ismael Angel                                     --------------------------*/
+/*---------------- Hernández Jiménez Efrén Antonio                                --------------------------*/
+/*---------------- Garcia Cardenas Fabian                                         --------------------------*/
+/*---------------- Padilla Cazares Jesus Alejandro                                --------------------------*/
 /*------------------------------------------- 2026-2 -------------------------------------------------------*/
 
 // Librarys and headers
@@ -22,6 +27,14 @@
 #include <Skybox.h>
 #include <iostream>
 #include <mmsystem.h>
+#include <cstdlib> // Para rand() y srand()
+#include <ctime>   // Para time()
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
+//definciones
+#define PI 3.1415926
 
 //Function prototypes
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -91,6 +104,79 @@ recorrido1 = true,
 recorrido2 = false,
 recorrido3 = false,
 recorrido4 = false;
+
+//otros datos para  otras animaciones
+glm::vec3 circleCenter = glm::vec3(-550.0f, 0.0f, 100.0f);
+float circleRadius = 100.0f;
+float leoRadiusAdvance = 0.0f;
+float limitA = (1.0f / 2.0f) * PI;
+float limitB = (3.0f / 2.0f) * PI;
+bool inMovementLeo = false;
+
+//positions for the animated models
+glm::vec3 initialPos = glm::vec3(-535.0f, 0.0f, 140.0f);
+glm::vec3 angryPos = glm::vec3(-680.0f, 0.0f, -285.0f);
+glm::vec3 pointingPos = glm::vec3(0.0f, 20.0f, 400.0f);
+glm::vec3 talkingAdamPos = glm::vec3(-350.0f, 20.0f, 350.0f);
+glm::vec3 talkingBoyPos = glm::vec3(-350.0f, 20.0f, 300.0f);
+glm::vec3 talkingPhoneBoyPos = glm::vec3(-800.0f, 0.0f, -235.0f);
+glm::vec3 talkingPhoneGirlPos = glm::vec3(-750.0f, 0.0f, 400.0f);
+glm::vec3 walkingBrianPos = glm::vec3(-400.0f, 0.0f, 170.0f);
+glm::vec3 walkingBrian00Pos = glm::vec3(400.0f, 0.0f, 450.0f);
+glm::vec3 walkingKatePos = glm::vec3(-650.0f, 0.0f, -400.0f);
+glm::vec3 walkingKate00Pos = glm::vec3(300.0f, 0.0f, -400.0f);
+glm::vec3 walkingKate01Pos = glm::vec3(75.0f, 20.0f, 350.0f);
+glm::vec3 startingPointLeonardPos = glm::vec3(-1000.0f, 20.0f, 100.0f);
+glm::vec3 walkingLeonardPos = startingPointLeonardPos;
+glm::vec3 walkingLeoPos = glm::vec3( circleCenter.x, circleCenter.y, circleCenter.z + (-1*circleRadius));
+glm::vec3 orignaLeoPos = walkingLeoPos;
+glm::vec3 walkingLeo00Pos = glm::vec3(-200.0f, 0.0f, -200.0);
+
+//escala spara los modelos animados
+glm::vec3 sittingLouiseScale = glm::vec3(1.4f);
+glm::vec3 talkingEveScale = glm::vec3(1.7f);
+glm::vec3 talkingWorkerScale = glm::vec3(1.4f);
+glm::vec3 angryScale = glm::vec3(1.45f);
+glm::vec3 pointingScale = glm::vec3(0.65f);
+glm::vec3 talkingAdamScale = glm::vec3(1.4f);
+glm::vec3 talkingBoyScale = glm::vec3(1.4f);
+glm::vec3 talkingPhoneBoyScale = glm::vec3(1.4f);
+glm::vec3 talkingPhoneGirlScale = glm::vec3(1.4f);
+glm::vec3 walkingBrianScale = glm::vec3(1.4f);
+glm::vec3 walkingKateScale = glm::vec3(1.4f);
+glm::vec3 walkingLeonardScale = glm::vec3(1.4f);
+
+//rotaciones para los modelos animados
+float angryRot00 = rand() % 360;
+float angryRot01 = rand() % 360;
+float angryRot02 = rand() % 360;
+float walkingBrianRot = rand() % 360;
+float walkingLeonardRot = 90.0f;
+float startingWalkingLeonardRot = 90.0f;
+float walkingLeoRot = -90.0f;
+float currentLeoRot = glm::radians(walkingLeoRot);
+
+//estados para las animciones de caminar
+int walkingBrian_currentState = 0;
+int walkingBrian00_currentState = 0;
+int walkingKate_currentState = 0;
+int walkingKate00_currentState = 0;
+int walkingKate01_currentState = 0;
+int walkingLeonard_currentState = 0;
+int walkingLeo_currentState = 0;
+int walkingLeo00_currentState = 0;
+
+//datos para las animaciones de los perosnajes
+float currentStateTime_walkingBrian = 0.0f;
+float currentStateTime_walkingKate = 0.0f;
+float currentStateTime_walkingKate00 = 0.0f;
+float currentStateTime_walkingKate01 = 0.0f;
+float currentStateTime_walkingLeo = 0.0f;
+float currentStateTime_walkingLeo00 = 0.0f;
+float currentStateTime_walkingBrian00 = 0.0f;
+float new_x = 0.0f;
+float new_z = 0.0f;
+float theta = limitA;
 
 /* Keyframes(Manipulación y dibujo) _> inicia */
 float	posX = 0.0f,
@@ -346,6 +432,8 @@ void myData() {
 
 int main() {
 
+	srand(time(NULL)); // Inicializa la semilla para la generación de números aleatorios
+
 	// glfw: initialize and configure
 	glfwInit();
 
@@ -466,6 +554,7 @@ int main() {
 	Model ventana00("resources/objects/static models/ventana/ventana.obj");
 	Model ventana01("resources/objects/static models/ventana/ventana.obj");
 	Model ventana02("resources/objects/static models/ventana/ventana.obj");
+	Model stand01("resources/objects/static models/stand01/stand00.obj");
 
 	//modelos animados
 	ModelAnim personaje01("resources/objects/Personaje1/Arm.dae");
@@ -473,27 +562,19 @@ int main() {
 
 	ModelAnim angry("resources/objects/animated models/Angry/Angry00.dae");
 	angry.initShaders(animShader.ID);
-	
+
 	ModelAnim pointing("resources/objects/animated models/Pointing Remy/Pointing00.dae");
 	pointing.initShaders(animShader.ID);
 	
 	ModelAnim sittingLouise("resources/objects/animated models/Sitting Louise/Sitting00.dae");
 	sittingLouise.initShaders(animShader.ID);
 	
-	ModelAnim sittingLouise00("resources/objects/animated models/Sitting Louise/Sitting00.dae");
-	sittingLouise00.initShaders(animShader.ID);
-	
-	ModelAnim sittingLouise01("resources/objects/animated models/Sitting Louise/Sitting00.dae");
-	sittingLouise01.initShaders(animShader.ID);
-	
 	ModelAnim talkingAdam("resources/objects/animated models/Talking Adam/Talking00.dae");
 	talkingAdam.initShaders(animShader.ID);
-	
+
 	ModelAnim talkingEve("resources/objects/animated models/Talking Eve/Talking00.dae");
 	talkingEve.initShaders(animShader.ID);
-	ModelAnim talkingEve00("resources/objects/animated models/Talking Eve/Talking00.dae");
-	talkingEve00.initShaders(animShader.ID);
-	
+
 	ModelAnim talkingBoy("resources/objects/animated models/TalkingBoy/Talking00.dae");
 	talkingBoy.initShaders(animShader.ID);
 	
@@ -505,21 +586,21 @@ int main() {
 	
 	ModelAnim talkingWorker("resources/objects/animated models/TalkingWorker/Talking00.dae");
 	talkingWorker.initShaders(animShader.ID);
-	ModelAnim talkingWorker00("resources/objects/animated models/TalkingWorker/Talking00.dae");
-	talkingWorker00.initShaders(animShader.ID);
-	ModelAnim talkingWorker01("resources/objects/animated models/TalkingWorker/Talking00.dae");
-	talkingWorker01.initShaders(animShader.ID);
-	ModelAnim talkingWorker02("resources/objects/animated models/TalkingWorker/Talking00.dae");
-	talkingWorker02.initShaders(animShader.ID);
 	
-	ModelAnim walkingBrian("resources/objects/animated models/Walking Brian/Walking00.dae");
-	walkingBrian.initShaders(animShader.ID);
-	
+	ModelAnim walkingKratos("resources/objects/animated models/Walking Brian/Walking00.dae");
+	walkingKratos.initShaders(animShader.ID);
+	ModelAnim idleKratos("resources/objects/animated models/idle_00/idle_00_.dae");
+	idleKratos.initShaders(animShader.ID);
+
 	ModelAnim walkingKate("resources/objects/animated models/Walking Kate/Walking00.dae");
 	walkingKate.initShaders(animShader.ID);
-	
+	ModelAnim idleKate("resources/objects/animated models/TalkingPhoneKate/TalkingPhoneKate.dae");
+	idleKate.initShaders(animShader.ID);
+
 	ModelAnim walkingLeonard("resources/objects/animated models/Walking Leonard/Walking00.dae");
 	walkingLeonard.initShaders(animShader.ID);
+	ModelAnim talkingLeo("resources/objects/animated models/TalkingPhoneLeo/TalkingLeo.dae");
+	talkingLeo.initShaders(animShader.ID);
 
 	//Inicialización de KeyFrames
 	for (int i = 0; i < MAX_FRAMES; i++)
@@ -635,103 +716,663 @@ int main() {
 		animShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 		animShader.setVec3("light.direction", lightDirection);
 		animShader.setVec3("viewPos", camera.Position);
-	
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 15.0f, -135.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(0.25f));
-		animShader.setMat4("model", modelOp);
-		personaje01.Draw(animShader);
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-525.0f, 1.0f, -135.0f));
+		//sitting louise -- inicia
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-525.0f, 1.0f, -350.0f));
 		modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.15f));
+		modelOp = glm::scale(modelOp, sittingLouiseScale);
 		animShader.setMat4("model", modelOp);
 		sittingLouise.Draw(animShader);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-630.0f, 1.0f, 475.0f));
 		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.15f));
+		modelOp = glm::scale(modelOp, sittingLouiseScale);
 		animShader.setMat4("model", modelOp);
-		sittingLouise00.Draw(animShader);
+		sittingLouise.Draw(animShader);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-650.0f, 1.0f, -480.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.15f));
+		modelOp = glm::scale(modelOp, sittingLouiseScale);
 		animShader.setMat4("model", modelOp);
-		sittingLouise01.Draw(animShader);
+		sittingLouise.Draw(animShader);
+		//sitting louise -- termina
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-750.0f, 0.0f, -225.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
-		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		animShader.setMat4("model", modelOp);
-		talkingEve.Draw(animShader);
-
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-750.0f, 0.0f, -275.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
+		//Parejas hablando -- inicia
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-800.0f, 0.0f, -350.0f));
+		modelOp = glm::scale(modelOp, talkingWorkerScale);
 		animShader.setMat4("model", modelOp);
 		talkingWorker.Draw(animShader);
-
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-650.0f, 0.0f, -350.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-800.0f, 0.0f, -300.0f));
 		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelOp = glm::scale(modelOp, talkingWorkerScale);
 		animShader.setMat4("model", modelOp);
-		talkingEve00.Draw(animShader);
+		talkingWorker.Draw(animShader);
+		//Parejas hablando -- termina
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-635.0f, 0.0f, -400.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
-		animShader.setMat4("model", modelOp);
-		talkingWorker00.Draw(animShader);
-
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-742.0f, 0.0f, 0.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
-		animShader.setMat4("model", modelOp);
-		talkingWorker01.Draw(animShader);
-
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-742.0f, 0.0f, 35.0f));
-		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.5f));
-		animShader.setMat4("model", modelOp);
-		talkingWorker02.Draw(animShader);
-
-		/*
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		//angry -- inicia
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-700.0f, 0.0f, -150.0f));
+		modelOp = glm::scale(modelOp, angryScale);
+		modelOp = glm::rotate(modelOp, glm::radians(angryRot01), glm::vec3(0.0f, 1.0f, 0.0f));
 		animShader.setMat4("model", modelOp);
 		angry.Draw(animShader);
+		
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-800.0f, 0.0f, 250.5f));
+		modelOp = glm::scale(modelOp, angryScale);
+		modelOp = glm::rotate(modelOp, glm::radians(angryRot02), glm::vec3(0.0f, 1.0f, 0.0f));
+		animShader.setMat4("model", modelOp);
+		angry.Draw(animShader);
+		//angry -- termina
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 0.0f));
+		//pointing -- inicia
+		modelOp = glm::translate(glm::mat4(1.0f), pointingPos);
+		modelOp = glm::scale(modelOp, pointingScale);
 		animShader.setMat4("model", modelOp);
 		pointing.Draw(animShader);
+		//pointing -- termina
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(150.0f, 0.0f, 0.0f));
+		//parejas hablando adentro -- inicia
+		modelOp = glm::translate(glm::mat4(1.0f), talkingAdamPos);
+		modelOp = glm::scale(modelOp, talkingAdamScale);
+		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		animShader.setMat4("model", modelOp);
 		talkingAdam.Draw(animShader);
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 50.0f));
-		animShader.setMat4("model", modelOp);
-		talkingEve.Draw(animShader);
-
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 100.0f));
+		modelOp = glm::translate(glm::mat4(1.0f), talkingBoyPos);
+		modelOp = glm::scale(modelOp, talkingBoyScale);
 		animShader.setMat4("model", modelOp);
 		talkingBoy.Draw(animShader);
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -100.0f));
-		animShader.setMat4("model", modelOp);
-		talkingPhoneBoy.Draw(animShader);
-
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -150.0f));
+		modelOp = glm::translate(glm::mat4(1.0f), talkingPhoneGirlPos);
+		modelOp = glm::scale(modelOp, talkingPhoneGirlScale);
 		animShader.setMat4("model", modelOp);
 		talkingPhoneGirl.Draw(animShader);
+		//parejas hablando adentro -- termina
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-50.0f, 0.0f, 0.0f));
-		animShader.setMat4("model", modelOp);
-		walkingBrian.Draw(animShader);
+		//walking Brian -- inicia
+		switch(walkingBrian_currentState){
+			case 0:
+				currentStateTime_walkingBrian += deltaTime;
+				if ( currentStateTime_walkingBrian <= 10000) {
+					modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+					modelOp = glm::scale(modelOp, walkingBrianScale);
+					modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+					animShader.setMat4("model", modelOp);
+					idleKratos.Draw(animShader);
+				} else {
+					currentStateTime_walkingBrian = 0;
+					walkingBrian_currentState = 1;
+				}
+				break;
+			case 1:
+				if ( walkingBrianPos.x <= 430 ) {
+					walkingBrianPos.x += 5.0f;
+				} else {
+					walkingBrian_currentState = 2;
+				}
+				modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+				modelOp = glm::scale(modelOp, walkingBrianScale);
+				modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				walkingKratos.Draw(animShader);
+				break;
+			case 2:
+				currentStateTime_walkingBrian += deltaTime;
+				if (currentStateTime_walkingBrian <= 10000) {
+					modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+					modelOp = glm::scale(modelOp, walkingBrianScale);
+					modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+					animShader.setMat4("model", modelOp);
+					idleKratos.Draw(animShader);
+				}
+				else {
+					currentStateTime_walkingBrian = 0;
+					walkingBrian_currentState = 3;
+				}
+				break;
+			case 3:
+				if (walkingBrianPos.x >= -420.0f) {
+					walkingBrianPos.x -= 5.0f;
+				}
+				else {
+					walkingBrian_currentState = 0;
+				}
+				modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+				modelOp = glm::scale(modelOp, walkingBrianScale);
+				modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				walkingKratos.Draw(animShader);
+				break;
+			default:
+				modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+				modelOp = glm::scale(modelOp, walkingBrianScale);
+				modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				personaje01.Draw(animShader);
+				break;
+		}
+		//walking Brian -- termina
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 0.0f, 0.0f));
-		animShader.setMat4("model", modelOp);
-		walkingKate.Draw(animShader);
+		//walking Brian 00 -- inicia
+		switch (walkingBrian00_currentState) {
+		case 0:
+			currentStateTime_walkingBrian00 += deltaTime;
+			if (currentStateTime_walkingBrian00 <= 10000) {
+				modelOp = glm::translate(glm::mat4(1.0f), walkingBrian00Pos);
+				modelOp = glm::scale(modelOp, walkingBrianScale);
+				modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				idleKratos.Draw(animShader);
+			}
+			else {
+				currentStateTime_walkingBrian00 = 0;
+				walkingBrian00_currentState = 1;
+			}
+			break;
+		case 1:
+			if (walkingBrian00Pos.z >= -50) {
+				walkingBrian00Pos.z -= 5.0f;
+			}
+			else {
+				walkingBrian00_currentState = 2;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingBrian00Pos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingKratos.Draw(animShader);
+			break;
+		case 2:
+			currentStateTime_walkingBrian00 += deltaTime;
+			if (currentStateTime_walkingBrian00 <= 10000) {
+				modelOp = glm::translate(glm::mat4(1.0f), walkingBrian00Pos);
+				modelOp = glm::scale(modelOp, walkingBrianScale);
+				modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				idleKratos.Draw(animShader);
+			}
+			else {
+				currentStateTime_walkingBrian00 = 0;
+				walkingBrian00_currentState = 3;
+			}
+			break;
+		case 3:
+			if (walkingBrian00Pos.z <= 450.0f) {
+				walkingBrian00Pos.z += 5.0f;
+			}
+			else {
+				walkingBrian00_currentState = 0;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingBrian00Pos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingKratos.Draw(animShader);
+			break;
+		default:
+			modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			personaje01.Draw(animShader);
+			break;
+		}
+		//walking Brian00 -- termina
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-150.0f, 0.0f, 0.0f));
-		animShader.setMat4("model", modelOp);
-		walkingLeonard.Draw(animShader);
-		*/
+		//walking kate -- inicia
+		switch (walkingKate_currentState) {
+		case 0:
+			currentStateTime_walkingKate += deltaTime;
+			if (currentStateTime_walkingKate <= 15500) {
+				modelOp = glm::translate(glm::mat4(1.0f), walkingKatePos);
+				modelOp = glm::scale(modelOp, walkingKateScale);
+				modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				idleKate.Draw(animShader);
+			}
+			else {
+				currentStateTime_walkingKate = 0;
+				walkingKate_currentState = 1;
+			}
+			break;
+		case 1:
+			if (walkingKatePos.z <= 400.0f) {
+				walkingKatePos.z += 5.0f;
+			}
+			else {
+				walkingKate_currentState = 2;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingKatePos);
+			modelOp = glm::scale(modelOp, walkingKateScale);
+			modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingKate.Draw(animShader);
+			break;
+		case 2:
+			currentStateTime_walkingKate += deltaTime;
+			if (currentStateTime_walkingKate <= 15750) {
+				modelOp = glm::translate(glm::mat4(1.0f), walkingKatePos);
+				modelOp = glm::scale(modelOp, walkingKateScale);
+				modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				idleKate.Draw(animShader);
+			}
+			else {
+				currentStateTime_walkingKate = 0;
+				walkingKate_currentState = 3;
+			}
+			break;
+		case 3:
+			if (walkingKatePos.z >= -400.0f) {
+				walkingKatePos.z -= 5.0f;
+			}else {
+				walkingKate_currentState = 0;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingKatePos);
+			modelOp = glm::scale(modelOp, walkingKateScale);
+			modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingKate.Draw(animShader);
+			break;
+		default:
+			modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			personaje01.Draw(animShader);
+			break;
+		}
+		//walking kate -- termina
+
+		//walking kate 00 -- inicia
+		switch (walkingKate00_currentState) {
+		case 0:
+			currentStateTime_walkingKate00 += deltaTime;
+			if (currentStateTime_walkingKate00 <= 15500) {
+				modelOp = glm::translate(glm::mat4(1.0f), walkingKate00Pos);
+				modelOp = glm::scale(modelOp, walkingKateScale);
+				modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				idleKate.Draw(animShader);
+			}
+			else {
+				currentStateTime_walkingKate00 = 0;
+				walkingKate00_currentState = 1;
+			}
+			break;
+		case 1:
+			if (walkingKate00Pos.z <= 230.0f) {
+				walkingKate00Pos.z += 5.0f;
+			}
+			else {
+				walkingKate00_currentState = 2;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingKate00Pos);
+			modelOp = glm::scale(modelOp, walkingKateScale);
+			modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingKate.Draw(animShader);
+			break;
+		case 2:
+			currentStateTime_walkingKate00 += deltaTime;
+			if (currentStateTime_walkingKate00 <= 15750) {
+				modelOp = glm::translate(glm::mat4(1.0f), walkingKate00Pos);
+				modelOp = glm::scale(modelOp, walkingKateScale);
+				modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				idleKate.Draw(animShader);
+			}
+			else {
+				currentStateTime_walkingKate00 = 0;
+				walkingKate00_currentState = 3;
+			}
+			break;
+		case 3:
+			if (walkingKate00Pos.z >= -400.0f) {
+				walkingKate00Pos.z -= 5.0f;
+			}
+			else {
+				walkingKate00_currentState = 0;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingKate00Pos);
+			modelOp = glm::scale(modelOp, walkingKateScale);
+			modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingKate.Draw(animShader);
+			break;
+		default:
+			modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			personaje01.Draw(animShader);
+			break;
+		}
+		//walking kate 00 -- termina
+
+		//walking kate 01 -- inicia
+		switch (walkingKate01_currentState) {
+		case 0:
+			currentStateTime_walkingKate01 += deltaTime;
+			if (currentStateTime_walkingKate01 <= 15500) {
+				modelOp = glm::translate(glm::mat4(1.0f), walkingKate01Pos);
+				modelOp = glm::scale(modelOp, walkingKateScale);
+				modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				idleKate.Draw(animShader);
+			}
+			else {
+				currentStateTime_walkingKate01 = 0;
+				walkingKate01_currentState = 1;
+			}
+			break;
+		case 1:
+			if (walkingKate01Pos.x >= -250.0f) {
+				walkingKate01Pos.x -= 5.0f;
+			}
+			else {
+				walkingKate01_currentState = 2;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingKate01Pos);
+			modelOp = glm::scale(modelOp, walkingKateScale);
+			modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingKate.Draw(animShader);
+			break;
+		case 2:
+			currentStateTime_walkingKate01 += deltaTime;
+			if (currentStateTime_walkingKate01 <= 15750) {
+				modelOp = glm::translate(glm::mat4(1.0f), walkingKate01Pos);
+				modelOp = glm::scale(modelOp, walkingKateScale);
+				modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				animShader.setMat4("model", modelOp);
+				idleKate.Draw(animShader);
+			}
+			else {
+				currentStateTime_walkingKate01 = 0;
+				walkingKate01_currentState = 3;
+			}
+			break;
+		case 3:
+			if (walkingKate01Pos.x <= 75.0f) {
+				walkingKate01Pos.x += 5.0f;
+			}
+			else {
+				walkingKate01_currentState = 0;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingKate01Pos);
+			modelOp = glm::scale(modelOp, walkingKateScale);
+			modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingKate.Draw(animShader);
+			break;
+		default:
+			modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			personaje01.Draw(animShader);
+			break;
+		}
+		//walking kate 01 -- termina
+
+		//walking leonard -- inicia
+		switch (walkingLeonard_currentState) {
+		case 0:
+			if (walkingLeonardPos.x <= 0.0f) { 
+				walkingLeonardPos.x += 5.0f;
+			}
+			else {
+				walkingLeonard_currentState = 1;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeonardPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeonardRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 1:
+			if (walkingLeonardRot <= 180.0f) {
+				walkingLeonardRot += 5.0f;
+			}
+			else {
+				walkingLeonard_currentState = 2;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeonardPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeonardRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 2:
+			if (walkingLeonardPos.z >= -165.0f) {
+				walkingLeonardPos.z -= 5.0f;
+			}
+			else {
+				walkingLeonard_currentState = 3;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeonardPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeonardRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 3:
+			if (walkingLeonardPos.y <= 135.0f) {
+				walkingLeonardPos.z -= 5.0f;
+				walkingLeonardPos.y += 2.5f;
+			}
+			else {
+				walkingLeonard_currentState = 4;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeonardPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeonardRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 4:
+			if (walkingLeonardRot >= 90.0f) {
+				walkingLeonardRot -= 5.0f;
+			}
+			else {
+				walkingLeonard_currentState = 5;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeonardPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeonardRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 5:
+			if (walkingLeonardPos.x <= 110.0f) {
+				walkingLeonardPos.x += 5.0f;
+			}
+			else {
+				walkingLeonard_currentState = 6;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeonardPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeonardRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 6:
+			if (walkingLeonardRot >= 0.0f) {
+				walkingLeonardRot -= 5.0f;
+			}
+			else {
+				walkingLeonard_currentState = 7;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeonardPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeonardRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 7:
+			if (walkingLeonardPos.y <= 270.0f) {
+				walkingLeonardPos.z += 5.0f;
+				walkingLeonardPos.y += 2.5f;
+			}
+			else {
+				walkingLeonardPos = startingPointLeonardPos;
+				walkingLeonardRot = startingWalkingLeonardRot;
+				walkingLeonard_currentState = 0;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeonardPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeonardRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		default:
+			modelOp = glm::translate(glm::mat4(1.0f), initialPos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			personaje01.Draw(animShader);
+			break;
+		}
+		//walking leonard -- termina
+
+		//walking leo --inicia
+		switch (walkingLeo_currentState) {
+		case 0:
+			if (currentStateTime_walkingLeo <= 25000) {
+				currentStateTime_walkingLeo += deltaTime;
+			}
+			else {
+				currentStateTime_walkingLeo = 0;
+				walkingLeo_currentState = 1;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeoPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeoRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			talkingLeo.Draw(animShader);
+			break;
+		case 1:
+			if ( theta <= limitB ) {
+				theta += 0.025;
+				new_x = circleCenter.x + circleRadius * cos(theta);
+				new_z = circleCenter.z - circleRadius * sin(theta);
+				walkingLeoPos.x = new_x;
+				walkingLeoPos.z = new_z;
+			}
+			else {
+				walkingLeo_currentState = 2;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeoPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, 2*glm::radians(walkingLeoRot)+theta, glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 2:
+			if (currentStateTime_walkingLeo <= 25000) {
+				currentStateTime_walkingLeo += deltaTime;
+			}
+			else {
+				currentStateTime_walkingLeo = 0;
+				walkingLeo_currentState = 3;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeoPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeoRot), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			talkingLeo.Draw(animShader);
+			break;
+		case 3:
+			if (theta >= limitA) {
+				theta -= 0.025;
+				new_x = circleCenter.x + circleRadius * cos(theta);
+				new_z = circleCenter.z - circleRadius * sin(theta);
+				walkingLeoPos.x = new_x;
+				walkingLeoPos.z = new_z;
+			}
+			else {
+				walkingLeo_currentState = 0;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeoPos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, glm::radians(currentLeoRot) + theta, glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		default:
+			modelOp = glm::translate(glm::mat4(1.0f), initialPos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeoRot+0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			personaje01.Draw(animShader);
+			break;
+		}
+		//walking leo -- termina
+
+		//walking leo 00 -- inicia
+		switch (walkingLeo00_currentState) {
+		case 0:
+			if (currentStateTime_walkingLeo00 <= 25000) {
+				currentStateTime_walkingLeo00 += deltaTime;
+			}
+			else {
+				currentStateTime_walkingLeo00 = 0;
+				walkingLeo00_currentState = 1;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeo00Pos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			talkingLeo.Draw(animShader);
+			break;
+		case 1:
+			if ( walkingLeo00Pos.z >= -450.0f ) {
+				walkingLeo00Pos.z -= 5.0f;
+			}
+			else {
+				walkingLeo00_currentState = 2;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeo00Pos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		case 2:
+			if (currentStateTime_walkingLeo00 <= 25000) {
+				currentStateTime_walkingLeo00 += deltaTime;
+			}
+			else {
+				currentStateTime_walkingLeo00 = 0;
+				walkingLeo00_currentState = 3;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeo00Pos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			talkingLeo.Draw(animShader);
+			break;
+		case 3:
+			if ( walkingLeo00Pos.z <= -200.0f ) {
+				walkingLeo00Pos.z += 5.0f;
+			}
+			else {
+				walkingLeo00_currentState = 0;
+			}
+			modelOp = glm::translate(glm::mat4(1.0f), walkingLeo00Pos);
+			modelOp = glm::scale(modelOp, walkingLeonardScale);
+			modelOp = glm::rotate(modelOp, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			walkingLeonard.Draw(animShader);
+			break;
+		default:
+			modelOp = glm::translate(glm::mat4(1.0f), initialPos);
+			modelOp = glm::scale(modelOp, walkingBrianScale);
+			modelOp = glm::rotate(modelOp, glm::radians(walkingLeoRot + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
+			animShader.setMat4("model", modelOp);
+			personaje01.Draw(animShader);
+			break;
+		}
+		//walking leo 00 -- termina
 		/*Sección de modelos animados -> ends*/
 
 		/*Primtivas del escenario -> start*/
@@ -1003,16 +1644,40 @@ int main() {
 		banca05.Draw(staticShader);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-560.0f, 0.0f, -460.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(7.5f));
+		modelOp = glm::scale(modelOp, glm::vec3(7.5f, 20.0f, 7.5f));
 		staticShader.setMat4("model", modelOp);
 		lampara.Draw(staticShader);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-750.0f, 0.0f, 475.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(7.5f));
+		modelOp = glm::scale(modelOp, glm::vec3(7.5f, 20.0f, 7.5f));
 		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		staticShader.setMat4("model", modelOp);
 		lampara.Draw(staticShader);
 
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f, 0.0f, -175.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(0.75f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		stand01.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f, 0.0f, -300.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(0.75f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		stand01.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-400.0f, 0.0f, -415.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(0.75f));
+		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		stand01.Draw(staticShader);
+
+		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 0.0f, 400.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(0.75f));
+		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		stand01.Draw(staticShader);
+	
 		//aqui se colocan los modelos estaticos que tengan algun tipo de transparencia -> inicia
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
