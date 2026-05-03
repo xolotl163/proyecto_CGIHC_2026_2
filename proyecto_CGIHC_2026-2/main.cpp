@@ -32,6 +32,9 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <al.h> //biblioteca para reproducir audio
+#include <alc.h> //biblioteca para reproducir audio
+#include <AudioFile.h> //biblioteca para cargar archivos de audio
 
 //definciones
 #define PI 3.1415926
@@ -42,9 +45,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void my_input(GLFWwindow* window, int key, int scancode, int action, int mods);
 void animate(void);
-
-/* handmade prototype functions */
-
 
 // settings
 unsigned int SCR_WIDTH = 800;
@@ -155,6 +155,7 @@ float walkingLeonardRot = 90.0f;
 float startingWalkingLeonardRot = 90.0f;
 float walkingLeoRot = -90.0f;
 float currentLeoRot = glm::radians(walkingLeoRot);
+float currentRot_zakuGun = 0.0f;
 
 //estados para las animciones de caminar
 int walkingBrian_currentState = 0;
@@ -165,6 +166,7 @@ int walkingKate01_currentState = 0;
 int walkingLeonard_currentState = 0;
 int walkingLeo_currentState = 0;
 int walkingLeo00_currentState = 0;
+int zakuGun_currentState = 0;
 
 //datos para las animaciones de los perosnajes
 float currentStateTime_walkingBrian = 0.0f;
@@ -468,7 +470,7 @@ int main() {
 	}
 
 	/*configure global opengl state*/
-	
+
 	//Se utilizan las funciones creadas para cargar las texturas y los datos de los vértices
 	// se habilita el depth test para que se dibujen correctamente los objetos en 3D
 	LoadTextures();
@@ -482,7 +484,7 @@ int main() {
 	Shader staticShader("Shaders/shader_Lights.vs", "Shaders/shader_Lights_mod.fs");	//To use with static models
 	Shader skyboxShader("Shaders/skybox.vs", "Shaders/skybox.fs");	//To use with skybox
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.fs");	//To use with animated models 
-	
+
 	//creación de skybox, se le asignan las texturas correspondientes a cada cara del cubo
 	vector<std::string> faces{
 		"resources/skybox/right.jpg",
@@ -500,7 +502,7 @@ int main() {
 
 	/*Creation and Load of models for the scene, the parameters are the path to the.obj file of each model */
 	Model piso("resources/objects/piso/piso.obj");
-	
+
 	//modelos estaticos
 	Model suelo("resources/objects/static models/banqueta/banqueta.obj");
 	Model techo("resources/objects/static models/banqueta/techo.obj");
@@ -555,6 +557,8 @@ int main() {
 	Model ventana01("resources/objects/static models/ventana/ventana.obj");
 	Model ventana02("resources/objects/static models/ventana/ventana.obj");
 	Model stand01("resources/objects/static models/stand01/stand00.obj");
+	Model zaku_body("resources/objects/static models/zaku/zaku_body_01.obj");
+	Model zaku_gun("resources/objects/static models/zaku/zaku_gun_01.obj");
 
 	//modelos animados
 	ModelAnim personaje01("resources/objects/Personaje1/Arm.dae");
@@ -565,10 +569,10 @@ int main() {
 
 	ModelAnim pointing("resources/objects/animated models/Pointing Remy/Pointing00.dae");
 	pointing.initShaders(animShader.ID);
-	
+
 	ModelAnim sittingLouise("resources/objects/animated models/Sitting Louise/Sitting00.dae");
 	sittingLouise.initShaders(animShader.ID);
-	
+
 	ModelAnim talkingAdam("resources/objects/animated models/Talking Adam/Talking00.dae");
 	talkingAdam.initShaders(animShader.ID);
 
@@ -577,16 +581,16 @@ int main() {
 
 	ModelAnim talkingBoy("resources/objects/animated models/TalkingBoy/Talking00.dae");
 	talkingBoy.initShaders(animShader.ID);
-	
+
 	ModelAnim talkingPhoneBoy("resources/objects/animated models/TalkingPhoneBoy/TalkingPhoneBoy.dae");
 	talkingPhoneBoy.initShaders(animShader.ID);
-	
+
 	ModelAnim talkingPhoneGirl("resources/objects/animated models/TalkingPhoneGirl/TalkingPhone.dae");
 	talkingPhoneGirl.initShaders(animShader.ID);
-	
+
 	ModelAnim talkingWorker("resources/objects/animated models/TalkingWorker/Talking00.dae");
 	talkingWorker.initShaders(animShader.ID);
-	
+
 	ModelAnim walkingKratos("resources/objects/animated models/Walking Brian/Walking00.dae");
 	walkingKratos.initShaders(animShader.ID);
 	ModelAnim idleKratos("resources/objects/animated models/idle_00/idle_00_.dae");
@@ -616,6 +620,60 @@ int main() {
 	glm::mat4 modelOp = glm::mat4(1.0f);		// Initialize Matrix, Use this matrix for individual models
 	glm::mat4 viewOp = glm::mat4(1.0f);		    // Use this matrix for ALL models
 	glm::mat4 projectionOp = glm::mat4(1.0f);	// This matrix is for Projection
+
+	//para el audio -> inicia
+	// cargar el audio
+	AudioFile<float> audioFile;
+	if (!audioFile.load("resources/sounds/sonido_ambiental.wav")) {
+		std::cerr << "Error loading audio file!" << std::endl;
+		return -1;
+	}
+	int sampleRate = audioFile.getSampleRate();
+	int numChannels = audioFile.getNumChannels();
+
+	//para saber si es mono o estéreo
+	ALenum format = (numChannels == 2) ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+
+	//cnvertir los datos de audio a un formato que OpenAL pueda usar
+	std::vector<int16_t> pcmData;
+	int numSamples = audioFile.getNumSamplesPerChannel();
+
+	for (int i = 0; i < numSamples; i++) {
+		for (int canal = 0; canal < numChannels; canal++) {
+			float sample = audioFile.samples[canal][i];
+			// Limitar para evitar saturación (clipping)
+			if (sample > 1.0f) sample = 1.0f;
+			if (sample < -1.0f) sample = -1.0f;
+
+			pcmData.push_back(static_cast<int16_t>(sample * 32767.0f));
+		}
+	}
+
+	//inicializar OpenAL soft
+	ALCdevice* device = alcOpenDevice(nullptr); // Abre el dispositivo de audio por defecto
+	if (!device) {
+		std::cerr << "Error: No se pudo abrir el dispositivo de audio." << std::endl;
+		return -1;
+	}
+
+	ALCcontext* context = alcCreateContext(device, nullptr);
+	alcMakeContextCurrent(context);
+
+	//crear un buffer de audio y cargar los datos
+	ALuint buffer, source;
+
+	// Subir la información de audio a la tarjeta de sonido
+	alGenBuffers(1, &buffer);
+	alBufferData(buffer, format, pcmData.data(), pcmData.size() * sizeof(int16_t), sampleRate);
+
+	alGenSources(1, &source);
+	alSourcei(source, AL_BUFFER, buffer); //asignar el audio al reproductor
+	alSourcei(source, AL_LOOPING, AL_TRUE); //se repite en bucle
+
+	//reproducir el audio
+	alSourcePlay(source);
+
+	//para el audio -> termina
 
 	/* render loop -> start*/
 	while (!glfwWindowShouldClose(window))
@@ -1082,7 +1140,7 @@ int main() {
 			if (currentStateTime_walkingKate01 <= 15750) {
 				modelOp = glm::translate(glm::mat4(1.0f), walkingKate01Pos);
 				modelOp = glm::scale(modelOp, walkingKateScale);
-				modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				modelOp = glm::rotate(modelOp, glm::radians(walkingBrianRot), glm::vec3(0.0f, 1.0f, 0.0f));
 				animShader.setMat4("model", modelOp);
 				idleKate.Draw(animShader);
 			}
@@ -1100,7 +1158,7 @@ int main() {
 			}
 			modelOp = glm::translate(glm::mat4(1.0f), walkingKate01Pos);
 			modelOp = glm::scale(modelOp, walkingKateScale);
-			modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			animShader.setMat4("model", modelOp);
 			walkingKate.Draw(animShader);
 			break;
@@ -1678,6 +1736,46 @@ int main() {
 		staticShader.setMat4("model", modelOp);
 		stand01.Draw(staticShader);
 	
+		glm::mat4 tmp_zaku = glm::mat4(1.0f);
+		glm::vec3 gun_pos = glm::vec3(-0.718f, 1.6f, -0.237f);
+
+		tmp_zaku = modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 20.0f, 600.0f));
+		tmp_zaku = modelOp = glm::scale(modelOp, glm::vec3(60.0f));
+		tmp_zaku = modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		staticShader.setMat4("model", modelOp);
+		zaku_body.Draw(staticShader);
+
+		switch (zakuGun_currentState) {
+		case 0:
+			if (currentRot_zakuGun >= -90.0f) {
+				currentRot_zakuGun -= 5.0f;
+			}else {
+				zakuGun_currentState = 1;
+			}
+			modelOp = glm::translate(tmp_zaku, gun_pos);
+			modelOp = glm::rotate(modelOp, glm::radians(currentRot_zakuGun), glm::vec3(0.0f, 1.0f, 0.0f));
+			staticShader.setMat4("model", modelOp);
+			zaku_gun.Draw(staticShader);
+			break;
+		case 1:
+			if (currentRot_zakuGun <= 0.0f) {
+				currentRot_zakuGun += 5.0f;
+			}
+			else {
+				zakuGun_currentState = 0;
+			}
+			modelOp = glm::translate(tmp_zaku, gun_pos);
+			modelOp = glm::rotate(modelOp, glm::radians(currentRot_zakuGun), glm::vec3(0.0f, 1.0f, 0.0f));
+			staticShader.setMat4("model", modelOp);
+			zaku_gun.Draw(staticShader);
+			break;
+		default:
+			modelOp = glm::translate(tmp_zaku, glm::vec3(0.0f, 0.0f, 0.0f));
+			modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			staticShader.setMat4("model", modelOp);
+			zaku_gun.Draw(staticShader);
+		}
+
 		//aqui se colocan los modelos estaticos que tengan algun tipo de transparencia -> inicia
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1735,6 +1833,14 @@ int main() {
 	glDeleteVertexArrays(3, VAO);
 	glDeleteBuffers(3, VBO);
 	glfwTerminate();
+
+	//limpiar todo lo que se utiliza con el audio
+	alDeleteSources(1, &source);
+	alDeleteBuffers(1, &buffer);
+	alcMakeContextCurrent(nullptr);
+	alcDestroyContext(context);
+	alcCloseDevice(device);
+
 	return 0;
 }
 
