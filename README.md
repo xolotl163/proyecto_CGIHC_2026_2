@@ -21,7 +21,7 @@ Este proyecto consiste en la simulación de un entorno 3D interactivo, represent
 - Chávez Madrid Ismael Ángel 
 - Hernández Jiménez Efrén Antonio
 - García Cárdenas Fabián
- Padilla Cázares Jesús Alejandro
+- Padilla Cázares Jesús Alejandro
 
 ---
 
