@@ -56,6 +56,7 @@ Este proyecto consiste en la simulación de un entorno 3D interactivo, represent
 | Tecla | Acción |
 |-------|--------|
 | **W / A / S / D** | Movimiento de cámara (adelante, izquierda, atrás, derecha) |
+| **F1 / F2/ F3** | Camara prefijadas, posición 1, posición 2 y posición 3 respectivamente |
 | **Ratón** | Orientación de la cámara |
 | **Scroll** | Zoom in / out |
 | **ESC** | Salir de la aplicación |
@@ -77,6 +78,7 @@ Este proyecto consiste en la simulación de un entorno 3D interactivo, represent
 
 - **Estáticos:** Bancas, columnas, rejas, muros, ventanas, lámparas, stands, escaleras, robot Zaku.
 - **Animados:** 11 personajes con comportamientos autónomos (hablar, caminar, señalar).
+- **Modelo Zaku:** MS-06S Char's Zaku II" (https://skfb.ly/puDEo) by JUSTGAME is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 ---
 

@@ -102,7 +102,7 @@ public:
                 Pitch = -89.0f;
         }
 
-        // Update Front, Right and Up Vectors using the updated Euler angles
+        // Update Front, Right and Up Vectors using the updated Eulerangles
         updateCameraVectors();
     }
 
@@ -116,6 +116,27 @@ public:
         if (Zoom >= 45.0f)
             Zoom = 45.0f;
     }
+
+    void ResetRotation()
+    {
+        //recordar pitch es rotación es cabeceo o arriba a abajo (rotación sobre el eje x)
+		//recordar yaw es rotación de izquierda a derecha (rotación sobre el eje y)
+        this->Yaw = -90.0f;
+        this->Pitch = 0.0f;
+        this->Zoom = 45.0f;
+
+        updateCameraVectors();
+    }
+
+    void SetPrefixedView(float yaw, float pitch, glm::vec3 position) {
+        //recordar pitch es rotación es cabeceo o arriba a abajo (rotación sobre el eje x)
+        //recordar yaw es rotación de izquierda a derecha (rotación sobre el eje y)
+		ResetRotation(); // Resetea la rotación antes de aplicar la nueva vista
+        this->Yaw = yaw;
+        this->Pitch = pitch;
+        this->Position = position;
+        updateCameraVectors();
+	}
 
 private:
     // Calculates the front vector from the Camera's (updated) Euler Angles
