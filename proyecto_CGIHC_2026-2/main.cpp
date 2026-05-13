@@ -1859,6 +1859,16 @@ void my_input(GLFWwindow* window, int key, int scancode, int action, int mode)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, (float)deltaTime);
 
+	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS) {
+		camera.SetPrefixedView(-45.0f, -25.0f, glm::vec3(-1100.0f, 400.0f, 600.0f));
+	}
+	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS) {
+		camera.SetPrefixedView(180.0f, 0.0f, glm::vec3(700.0f, 150.0f, 100.0f));
+	}
+	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS) {
+		camera.SetPrefixedView(215.0f, -10.0f, glm::vec3(400.0f, 200.0f, 700.0f));
+	}
+
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
