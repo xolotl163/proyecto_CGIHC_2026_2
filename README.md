@@ -19,8 +19,9 @@ Este proyecto consiste en la simulación de un entorno 3D interactivo, represent
 
 ## Integrantes del Equipo
 - Chávez Madrid Ismael Ángel 
-- Hernández Jiménez Efrén Antonio
 - García Cárdenas Fabián
+- Hernández Jiménez Efrén Antonio
+- Jiménez Aguirre María Jazmín
 - Padilla Cázares Jesús Alejandro  
 
 ---
