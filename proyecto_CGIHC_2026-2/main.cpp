@@ -152,7 +152,6 @@ float angryRot00 = rand() % 360;
 float angryRot01 = rand() % 360;
 float angryRot02 = rand() % 360;
 float walkingBrianRot = rand() % 360;
-float walkingBrian_giro = -90.0f;
 float walkingLeonardRot = 90.0f;
 float startingWalkingLeonardRot = 90.0f;
 float walkingLeoRot = -90.0f;
@@ -160,6 +159,7 @@ float currentLeoRot = glm::radians(walkingLeoRot);
 float currentRot_zakuGun = 0.0f;
 
 //datos para las animaciones de caminar
+float walkingBrian_giro = -90.0f;
 float outerAngle_walkingBrian = 270.0f;
 float circle_radius_walkingBrian = 150.0f;
 glm::vec3 corner_center_walkingBrian = glm::vec3(-150.0f, 0.0f, 20.0f);
@@ -908,16 +908,20 @@ int main() {
 				walkingKratos.Draw(animShader);
 				break;
 			case 4:
-				if (outerAngle_walkingBrian > 180.0) {
+				if (outerAngle_walkingBrian >= 180.0) {
 					outerAngle_walkingBrian -= 1.0f;
 					walkingBrian_giro -= 1.0f;
+					walkingBrianPos.x = corner_center_walkingBrian.x + circle_radius_walkingBrian * cos(glm::radians(outerAngle_walkingBrian));
+					walkingBrianPos.z = corner_center_walkingBrian.z + circle_radius_walkingBrian * -sin(glm::radians(outerAngle_walkingBrian));
 				}
 				else {
 					walkingBrian_currentState = 5;
+					outerAngle_walkingBrian = 270.0f;
+					walkingBrian_giro = -90.0f;
+					std::cout << "Change state -> Outer Angle: " << outerAngle_walkingBrian << " | PosX: " << walkingBrianPos.x << " | PosZ: " << walkingBrianPos.z << std::endl;
 				}
 
-				walkingBrianPos.x = corner_center_walkingBrian.x + circle_radius_walkingBrian * cos(glm::radians(outerAngle_walkingBrian));
-				walkingBrianPos.z = corner_center_walkingBrian.z + circle_radius_walkingBrian * -sin(glm::radians(outerAngle_walkingBrian));
+				std::cout << "In-state Outer Angle: " << outerAngle_walkingBrian << " | PosX: " << walkingBrianPos.x << " | PosZ: " << walkingBrianPos.z << std::endl;
 
 				modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
 				modelOp = glm::scale(modelOp, walkingBrianScale);
@@ -933,7 +937,6 @@ int main() {
 				else {
 					walkingBrian_currentState = 6;
 				}
-
 				modelOp = glm::translate(glm::mat4(1.0f), walkingBrianPos);
 				modelOp = glm::scale(modelOp, walkingBrianScale);
 				modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
