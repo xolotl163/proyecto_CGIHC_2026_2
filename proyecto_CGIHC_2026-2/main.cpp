@@ -679,7 +679,7 @@ int main() {
 	alSourcei(source, AL_LOOPING, AL_TRUE); //se repite en bucle
 
 	//reproducir el audio
-	//alSourcePlay(source);
+	alSourcePlay(source);
 
 	//para el audio -> termina
 
@@ -1526,7 +1526,7 @@ int main() {
 		}
 		//walking leonard -- termina
 
-		//walking leo --inicia
+		//walking leo -- inicia
 		switch (walkingLeo_currentState) {
 		case 0:
 			if (currentStateTime_walkingLeo <= 25000) {
